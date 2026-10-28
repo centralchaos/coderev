@@ -1,0 +1,5 @@
+# Defaults from STANDARD.md v0.1. They are values to test.
+duplication_percent = 3
+coverage_percent = 80
+max_function_lines = 50
+max_nesting_level = 3
