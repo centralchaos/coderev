@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "coderev"
+version = "0.1.0"
+description = "Check new code in a git diff against a written review standard."
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+dependencies = [
+    "ruff==0.17.3",  # check 5 and check 6: ruff F401, F841, ERA001, FIX001, FIX002, PLR1702, and C901 when complexity_limit is set
+    "vulture==2.16",  # check 5: unused code and unreachable code
+    "jscpd==5.4.2",  # check 4: duplication on new Python lines
+    "lizard==1.24.3",  # check 6: function length via lizard --length
+    "diff-cover==11.0.0",  # check 10: coverage of lines in the git diff
+    "coverage==7.17.0",  # check 10: writes the XML report that diff-cover reads
+    "pytest==9.2.0",  # check 10: runs the tests that produce coverage
+    "tampercheck==0.1.1",  # check 10: tampercheck kinds test-deleted and test-skipped
+]
+
+[project.scripts]
+coderev = "coderev.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["coderev*"]
+
+[tool.setuptools.package-data]
+coderev = ["settings_default.toml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
