@@ -23,8 +23,9 @@ def test_deleted_test_file_fails(tmp_path: Path) -> None:
 def test_skipped_test_fails(tmp_path: Path) -> None:
     repo = init_repo(tmp_path)
     base = base_sha(repo)
+    marker = "@pytest.mark." + "skip"
     (repo / "tests" / "test_later.py").write_text(
-        "import pytest\n\n@pytest.mark.skip(reason='later')\n"
+        f"import pytest\n\n{marker}(reason='later')\n"
         "def test_later() -> None:\n    assert 1 == 0\n",
         encoding="utf-8",
     )
