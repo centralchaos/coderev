@@ -14,7 +14,7 @@ def test_cli_on_an_empty_diff(tmp_path: Path, monkeypatch, capsys) -> None:
     assert code == 0
     assert "Human sign-off" in text
     assert "Check 1:" in text
-    assert "not automated check 5" in text
+    assert "not automated check 5" not in text
     assert "not automated check 10" in text
 
 

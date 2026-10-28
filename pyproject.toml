@@ -17,7 +17,7 @@ dependencies = [
     "diff-cover==11.0.0",  # check 10: coverage of lines in the git diff
     "coverage==7.17.0",  # check 10: writes the XML report that diff-cover reads
     "pytest==9.2.0",  # check 10: runs the tests that produce coverage
-    "tampercheck==0.1.1",  # check 10: tampercheck kinds test-deleted and test-skipped
+    "tampercheck==0.1.1",  # check 10: kinds test-deleted and test-skipped; check 5: kind placeholder
 ]
 
 [project.scripts]

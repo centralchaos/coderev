@@ -18,10 +18,6 @@ _NOTES = (
         "Whether a new package exists on an index. The tool sees a same-line comment in the requirements or pyproject diff.",
     ),
     (
-        "check 5",
-        "NotImplementedError leftovers. ruff F901 flags raise NotImplemented. vulture does not flag a used raise NotImplementedError.",
-    ),
-    (
         "check 6",
         "Complexity. STANDARD.md marks the limit as to test and gives no number. Set complexity_limit in the settings file to turn on ruff C901.",
     ),

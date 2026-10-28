@@ -36,8 +36,8 @@ The tests for this repository are `pytest`.
 | lizard | MIT | Check 6 |
 | diff-cover | Apache-2.0 | Check 10 coverage |
 | coverage | Apache-2.0 | Check 10, because diff-cover reads its XML and does not run tests |
-| pytest | MIT | Check 10, because coverage needs a test run |
-| tampercheck | Apache-2.0 | Check 10 deleted test files and skipped tests |
+| pytest | MIT | Check 10. The coverage step runs the target repository's own tests, which runs that repository's code. |
+| tampercheck | Apache-2.0 | Check 10 deleted test files and skipped tests. Check 5 kind `placeholder`. |
 | gitleaks (prerequisite) | MIT | Check 9 |
 
 ## Rules and flags
@@ -52,6 +52,7 @@ The tests for this repository are `pytest`.
 | 5. TODO | ruff | `FIX002` |
 | 5. FIXME | ruff | `FIX001` |
 | 5. Unused code and unreachable code | vulture | Default report. Unreachable lines contain the words `unreachable code`. Names matching `test_*` are ignored so pytest collection is not a leftover. |
+| 5. NotImplementedError and other placeholders | tampercheck | kind `placeholder`, including `raise NotImplementedError` |
 | 6. Function length | lizard | `--length` / `-L`, field `NLOC`. A warning is a failure only when NLOC is above `max_function_lines` and the function overlaps a new line. |
 | 6. Nesting | ruff | `PLR1702` with `lint.pylint.max-nested-blocks` from `max_nesting_level`. The rule is in preview, so the run passes `--preview`. |
 | 9. Secrets | gitleaks | `gitleaks git --log-opts <base>..<head>`. The report line is the rule id, file, and line. |
@@ -59,14 +60,13 @@ The tests for this repository are `pytest`.
 | 10. Deleted test file | tampercheck | kind `test-deleted` |
 | 10. Skipped test | tampercheck | kind `test-skipped` |
 
-Coverage runs `coverage run --source=.` and omits `tests/`, `test_*.py`, and `conftest.py`, then diff-cover reads that XML. Test lines do not raise the percentage.
+The coverage step runs the target repository's own tests with `coverage run --source=.`. Running those tests runs that repository's code. It omits `tests/`, `test_*.py`, and `conftest.py`, then diff-cover reads the XML. Test lines do not raise the percentage.
 
 ## Not automated
 
 These parts of the standard have no existing tool rule here. The report says `not automated` and repeats them on the human list. The tool does not fail the run for them.
 
 - A new package exists on an index. Check 2 automates the same-line reason only.
-- `raise NotImplementedError` in code that is used. ruff `F901` flags `raise NotImplemented`, which is a different spelling. vulture does not flag the used form.
 - Complexity. Set `complexity_limit` in the settings file to turn on ruff `C901`. Until then it stays on the human list.
 - A test function removed inside a file that stays. tampercheck `test-deleted` flags a deleted test file.
 - `pytest.skip()`. tampercheck `test-skipped` flags `@pytest.mark.skip`, `@pytest.mark.skipif`, and `@unittest.skip`.

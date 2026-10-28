@@ -41,6 +41,29 @@ def test_covered_new_function_passes(tmp_path: Path) -> None:
     assert "diff-cover" in text
 
 
+def test_second_check_leaves_the_work_tree_clean(tmp_path: Path) -> None:
+    repo = init_repo(tmp_path)
+    base = base_sha(repo)
+    (repo / ".gitignore").write_text(".coverage\n", encoding="utf-8")
+    (repo / "pkg" / "gamma.py").write_text(
+        "def gamma(value: int) -> int:\n    return value + 1\n",
+        encoding="utf-8",
+    )
+    (repo / "tests" / "test_gamma.py").write_text(
+        cover("gamma", "gamma", "gamma(1) == 2"),
+        encoding="utf-8",
+    )
+    commit_all(repo, "add gamma")
+    first, first_text = run(repo, base)
+    caches = list(repo.rglob("__pycache__")) + list(repo.rglob(".pytest_cache"))
+    second, second_text = run(repo, base)
+    assert first == 0
+    assert "pass check 10" in first_text
+    assert caches == []
+    assert second == 0
+    assert "uncommitted" not in second_text
+
+
 def test_old_uncovered_function_does_not_fail(tmp_path: Path) -> None:
     repo = init_repo(tmp_path)
     (repo / "pkg" / "old.py").write_text(

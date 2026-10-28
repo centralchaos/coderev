@@ -42,6 +42,7 @@ def _missing_tool() -> Finding | None:
 def _measure(repo: Path, data_path: Path, xml_path: Path) -> Finding | None:
     env = os.environ.copy()
     env["COVERAGE_FILE"] = str(data_path)
+    env["PYTHONDONTWRITEBYTECODE"] = "1"
     env.pop("COVERAGE_PROCESS_START", None)
     ran = run_command(
         [
@@ -54,6 +55,8 @@ def _measure(repo: Path, data_path: Path, xml_path: Path) -> Finding | None:
             _OMIT,
             "-m",
             "pytest",
+            "-p",
+            "no:cacheprovider",
             "-q",
         ],
         repo,

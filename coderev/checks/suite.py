@@ -5,7 +5,7 @@ import shutil
 from coderev.findings import Finding, fail, ok
 from coderev.proc import last_line, run_command
 
-_KINDS = {"test-deleted", "test-skipped"}
+_KINDS = {"test-deleted", "test-skipped", "placeholder"}
 
 
 def check_suite(repo: Path, base: str) -> list[Finding]:
@@ -25,7 +25,7 @@ def check_suite(repo: Path, base: str) -> list[Finding]:
     return [
         ok(
             "check 10",
-            "no deleted test file and no newly skipped test (tampercheck test-deleted, test-skipped)",
+            "no deleted test file, skipped test, or placeholder (tampercheck test-deleted, test-skipped, placeholder)",
         )
     ]
 

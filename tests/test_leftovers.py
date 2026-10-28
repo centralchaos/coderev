@@ -78,9 +78,10 @@ def test_unreachable_code_fails_vulture(tmp_path: Path) -> None:
     assert "pkg/dead.py" in text
 
 
-def test_used_not_implemented_error_passes(tmp_path: Path) -> None:
+def test_not_implemented_error_fails_placeholder(tmp_path: Path) -> None:
     repo = init_repo(tmp_path)
-    source = "def live(n: int) -> int:\n    raise NotImplementedError(n)\n"
+    stub = "raise " + "NotImplementedError"
+    source = f"def live(n: int) -> int:\n    {stub}(n)\n"
     base = base_sha(repo)
     (repo / "pkg" / "stub.py").write_text(source, encoding="utf-8")
     (repo / "tests" / "test_stub.py").write_text(
@@ -92,9 +93,10 @@ def test_used_not_implemented_error_passes(tmp_path: Path) -> None:
     )
     commit_all(repo, "stub")
     code, text = run(repo, base)
-    assert code == 0
-    assert "not automated check 5" in text
-    assert "NotImplementedError" in text
+    assert code == 1
+    assert "placeholder" in text
+    assert "tampercheck" in text
+    assert "pkg/stub.py" in text
 
 
 def test_clean_module_passes_leftovers(tmp_path: Path) -> None:
